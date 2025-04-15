@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.DTO.UserProfileDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String firstName;
+    private String lastName;
     @Column(unique = true,nullable = false)
     private String username;
     @Column(unique = true,nullable = false)
@@ -29,6 +32,22 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setId(Long id) {
@@ -90,4 +109,12 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+    public static UserProfileDTO mapToDTO(User user) {
+        UserProfileDTO dto = new UserProfileDTO();
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPassword(user.getPassword());
+        return dto;
+    }
+
 }

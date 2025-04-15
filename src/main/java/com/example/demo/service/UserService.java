@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.UserProfileDTO;
+import com.example.demo.ResourceNotFoundException;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -44,4 +46,9 @@ public class UserService {
         }
         return false;
     }
+    public UserProfileDTO getUserProfile(Long id) {
+        return userRepository.findById(id)
+                .map(User::mapToDTO) // or user -> user.mapToDTO()
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    };
 }
