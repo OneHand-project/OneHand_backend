@@ -51,4 +51,7 @@ public class UserService {
                 .map(User::mapToDTO) // or user -> user.mapToDTO()
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     };
+    public UserProfileDTO updateUserProfile (Long id, UserProfileDTO updatedProfile ){
+
+    }
 }
