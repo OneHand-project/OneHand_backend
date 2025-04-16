@@ -52,7 +52,14 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     };
     public UserProfileDTO updateUserProfile (Long id, UserProfileDTO updatedProfile ){
-        //empty
-        return null;
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.setFirstName(updatedProfile.getFirstName());
+        user.setLastName(updatedProfile.getLastName());
+        if( updatedProfile.getPassword() != null && !updatedProfile.getPassword().isEmpty()){
+            user.setPassword(updatedProfile.getPassword());
+        }
+        User updatedUser = userRepository.save(user);
+        return updatedUser.mapToDTO() ;
+
     }
 }

@@ -109,11 +109,11 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
-    public static UserProfileDTO mapToDTO(User user) {
+    public UserProfileDTO mapToDTO() {
         UserProfileDTO dto = new UserProfileDTO();
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
-        dto.setPassword(user.getPassword());
+        dto.setFirstName(this.firstName);
+        dto.setLastName(this.lastName);
+        dto.setPassword(this.password);
         return dto;
     }
 
