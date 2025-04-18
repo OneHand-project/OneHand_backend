@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.LoginRequestDTO;
+import com.example.demo.DTO.UserProfileDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +52,21 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<UserProfileDTO> updateUserProfile (@PathVariable Long id, @RequestBody UserProfileDTO profileDTO){
+        UserProfileDTO updatedProfile = userService.updateUserProfile(id, profileDTO);
+        System.out.println("✅ Controller method reached");
+        return ResponseEntity.ok(updatedProfile);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequestDTO request) {
+        try {
+            User user = userService.login(request.getUserName(), request.getPassword());
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+    }
+
 
 }

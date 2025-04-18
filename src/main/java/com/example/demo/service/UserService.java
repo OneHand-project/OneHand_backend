@@ -60,6 +60,16 @@ public class UserService {
         }
         User updatedUser = userRepository.save(user);
         return updatedUser.mapToDTO() ;
-
     }
+    public User login(String userName, String password) {
+        Optional<User> userOpt = userRepository.findByUsername(userName);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        throw new RuntimeException("Invalid userName or password");
+    }
+
 }

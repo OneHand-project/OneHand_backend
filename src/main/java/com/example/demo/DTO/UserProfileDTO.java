@@ -28,4 +28,7 @@ public class UserProfileDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public UserProfileDTO() {
+    }
 }

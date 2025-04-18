@@ -1,22 +1,23 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Campaign {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private String title;
-    private String description;
-    private String location;
-    private String imageUrl;
-    private String date;
-    private Double donationGoal;
+        private String title;
+        private String description;
+        private String location;
+        private String imageUrl;
+        private String date;
+        private Double donationGoal;
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        private User organizer;
+
 
     public Long getId() {
         return id;
@@ -72,5 +73,12 @@ public class Campaign {
 
     public void setDonationGoal(Double donationGoal) {
         this.donationGoal = donationGoal;
+    }
+    public User getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(User organizer) {
+        this.organizer = organizer;
     }
 }
