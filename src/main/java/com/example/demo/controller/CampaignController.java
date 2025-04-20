@@ -28,17 +28,24 @@ public class CampaignController {
         Optional<Campaign> campaign = campaignService.getCampaignById(id);
         return campaign.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @GetMapping("/{title}")
+    @GetMapping("/title/{title}")
     public ResponseEntity<Campaign> getCampaignByTitle(@PathVariable String title) {
         Optional<Campaign> campaign = campaignService.getCampaignByTitle(title);
         return campaign.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Create a new campaign
-    @PostMapping
-    public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
-        Campaign savedCampaign = campaignService.createCampaign(campaign);
-        return ResponseEntity.ok(savedCampaign);
+    @PostMapping("/{organizerId}")
+    public ResponseEntity<Campaign> createCampaign(
+            @PathVariable Long organizerId,
+            @RequestBody Campaign campaign) {
+        Campaign created = campaignService.createCampaign(campaign, organizerId);
+        return ResponseEntity.ok(created);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
+        campaignService.deleteCampaign(id);
+        return ResponseEntity.noContent().build();
     }
 
 

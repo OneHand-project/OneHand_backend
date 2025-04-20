@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Campaign;
 import com.example.demo.entity.User;
 import com.example.demo.repository.CampaignRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +13,17 @@ import java.util.Optional;
 public class CampaignService {
     private final CampaignRepository campaignRepository;
 
-    public CampaignService(CampaignRepository campaignRepository) {
+    private final UserRepository userRepository;
+
+    public CampaignService(CampaignRepository campaignRepository, UserRepository userRepository) {
         this.campaignRepository = campaignRepository;
+        this.userRepository = userRepository;
     }
-    public Campaign createCampaign ( Campaign campaign){
+
+    public Campaign createCampaign(Campaign campaign, Long organizerId) {
+        User organizer = userRepository.findById(organizerId)
+                .orElseThrow(() -> new RuntimeException("Organizer not found"));
+        campaign.setOrganizer(organizer);
         return campaignRepository.save(campaign);
     }
     public List<Campaign> getAllCampaigns(){
