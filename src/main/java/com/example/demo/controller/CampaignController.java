@@ -1,4 +1,46 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Campaign;
+import com.example.demo.entity.User;
+import com.example.demo.service.CampaignService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/campaign")
 public class CampaignController {
+    private final CampaignService campaignService;
+
+    public CampaignController(CampaignService campaignService) {
+        this.campaignService = campaignService;
+    }
+    @GetMapping
+    public List<Campaign> getAllCampaigns() {
+        return campaignService.getAllCampaigns();
+    }
+
+    // Get campaign by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
+        Optional<Campaign> campaign = campaignService.getCampaignById(id);
+        return campaign.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/{title}")
+    public ResponseEntity<Campaign> getCampaignByTitle(@PathVariable String title) {
+        Optional<Campaign> campaign = campaignService.getCampaignByTitle(title);
+        return campaign.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Create a new campaign
+    @PostMapping
+    public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
+        Campaign savedCampaign = campaignService.createCampaign(campaign);
+        return ResponseEntity.ok(savedCampaign);
+    }
+
+
 }
+
