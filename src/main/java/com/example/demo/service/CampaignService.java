@@ -42,4 +42,11 @@ public class CampaignService {
         }
         return false;
     }
+    public List<Campaign> getCampaignsByCategory(String category) {
+        return campaignRepository.findByCategoryIgnoreCase(category);
+    }
+
+    public List<Campaign> getCampaignsByOrganizer(Long organizerId) {
+        return campaignRepository.findByOrganizerId(organizerId);
+    }
 }

@@ -47,6 +47,16 @@ public class CampaignController {
         campaignService.deleteCampaign(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/filter/category")
+    public ResponseEntity<List<Campaign>> filterByCategory(@RequestParam String category) {
+        return ResponseEntity.ok(campaignService.getCampaignsByCategory(category));
+    }
+
+    @GetMapping("/filter/organizer")
+    public ResponseEntity<List<Campaign>> filterByOrganizer(@RequestParam Long organizerId) {
+        return ResponseEntity.ok(campaignService.getCampaignsByOrganizer(organizerId));
+    }
+
 
 
 }

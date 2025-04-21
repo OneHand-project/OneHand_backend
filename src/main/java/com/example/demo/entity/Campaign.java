@@ -14,6 +14,7 @@ public class Campaign {
         private String imageUrl;
         private String date;
         private Double donationGoal;
+        private String category;
         @ManyToOne
         @JoinColumn(name = "user_id")
         private User organizer;
@@ -80,5 +81,13 @@ public class Campaign {
 
     public void setOrganizer(User organizer) {
         this.organizer = organizer;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
