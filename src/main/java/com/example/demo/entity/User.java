@@ -2,13 +2,10 @@ package com.example.demo.entity;
 
 import com.example.demo.DTO.UserProfileDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity(name = "users")
-@AllArgsConstructor
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +26,19 @@ public class User {
 
     public User() {
     }
+
+//    public User(Long id, String firstName, String lastName, String username, String email, String password, String phoneNumber, boolean emailVerified, boolean phoneVerified, Role role) {
+//        this.id = id;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//        this.phoneNumber = phoneNumber;
+//        this.emailVerified = emailVerified;
+//        this.phoneVerified = phoneVerified;
+//        this.role = role;
+//    }
 
     public Long getId() {
         return id;
