@@ -6,6 +6,7 @@ import com.example.demo.entity.Wishlist;
 import com.example.demo.repository.CampaignRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WishlistRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class WishlistService {
     @Autowired
     private WishlistRepository wishlistRepository;
