@@ -9,6 +9,13 @@ public class RatingDTO {
     public RatingDTO() {
     }
 
+    public RatingDTO(int score, String comment, Long userId, Long campaignId) {
+        this.score = score;
+        this.comment = comment;
+        this.userId = userId;
+        this.campaignId = campaignId;
+    }
+
     public int getScore() {
         return score;
     }

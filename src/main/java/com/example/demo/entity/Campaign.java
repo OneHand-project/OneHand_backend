@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Campaign {
         @Id
@@ -11,7 +13,8 @@ public class Campaign {
         private String title;
         private String description;
         private String location;
-        private String imageUrl;
+        private Byte mainimage;
+        private List<byte> imagelist;
         private String date;
         private Double donationGoal;
         private String category;
@@ -52,12 +55,12 @@ public class Campaign {
         this.location = location;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte getMainimage() {
+        return mainimage;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setMainimage(byte mainimage) {
+        this.mainimage = mainimage;
     }
 
     public String getDate() {

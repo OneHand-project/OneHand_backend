@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.Campaign;
 import com.example.demo.entity.User;
 import com.example.demo.service.CampaignService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/campaign")
 public class CampaignController {
+    @Autowired
     private final CampaignService campaignService;
 
     public CampaignController(CampaignService campaignService) {
