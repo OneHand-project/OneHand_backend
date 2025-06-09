@@ -1,10 +1,29 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 public class Campaign {
+
+    public Campaign() {
+        // no-arg constructor for JPA
+    }
+
+    public Campaign(
+        String title,
+        String description,
+        String location,
+        String date,
+        Double donationGoal,
+        String category
+    ) {
+        setTitle(title);
+        setDescription(description);
+        setLocation(location);
+        setDate(date);
+        setDonationGoal(donationGoal);
+        setCategory(category);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +33,6 @@ public class Campaign {
     private String description;
     private String location;
 
-    @Lob
     private byte[] mainimage;
 
     public byte[] getMainimage() {
@@ -25,18 +43,9 @@ public class Campaign {
         this.mainimage = mainimage;
     }
 
-    private List<byte[]> imagelist;
     private String date;
     private Double donationGoal;
     private String category;
-
-    public List<byte[]> getImagelist() {
-        return imagelist;
-    }
-
-    public void setImagelist(List<byte[]> imagelist) {
-        this.imagelist = imagelist;
-    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")

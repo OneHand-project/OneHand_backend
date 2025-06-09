@@ -27,18 +27,12 @@ public class CampaignService {
         this.userRepository = userRepository;
     }
 
-    public Campaign createCampaign(CampaignDTO campaign, Long organizerId) {
-        Campaign camp = modelmapper.map(campaign, Campaign.class);
-        try {
-            camp.setMainimage(campaign.getMainimage().getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Campaign createCampaign(Campaign campaign, Long organizerId) {
         User organizer = userRepository
             .findById(organizerId)
             .orElseThrow(() -> new RuntimeException("Organizer not found"));
-        camp.setOrganizer(organizer);
-        return campaignRepository.save(camp);
+        campaign.setOrganizer(organizer);
+        return campaignRepository.save(campaign);
     }
 
     public List<Campaign> getAllCampaigns() {

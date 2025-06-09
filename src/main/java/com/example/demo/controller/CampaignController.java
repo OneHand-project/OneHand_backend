@@ -3,11 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.DTO.CampaignDTO;
 import com.example.demo.entity.Campaign;
 import com.example.demo.service.CampaignService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/campaign")
@@ -48,12 +50,30 @@ public class CampaignController {
     @PostMapping("/{organizerId}")
     public ResponseEntity<Campaign> createCampaign(
         @PathVariable Long organizerId,
-        @RequestBody CampaignDTO campaign
+        @ModelAttribute CampaignDTO campaignDTO,
+        @RequestPart(
+            value = "mainimage",
+            required = false
+        ) MultipartFile mainimage
     ) {
-        Campaign created = campaignService.createCampaign(
-            campaign,
-            organizerId
+        Campaign camp = new Campaign(
+            campaignDTO.getTitle(),
+            campaignDTO.getDescription(),
+            campaignDTO.getLocation(),
+            campaignDTO.getDate(),
+            campaignDTO.getDonationGoal(),
+            campaignDTO.getCategory()
         );
+        if (mainimage != null && !mainimage.isEmpty()) {
+            try {
+                byte[] imagebytes = mainimage.getBytes();
+                camp.setMainimage(imagebytes);
+            } catch (IOException e) {
+                // Handle error reading bytes from MultipartFile
+                throw new RuntimeException("Failed to read image bytes", e);
+            }
+        }
+        Campaign created = campaignService.createCampaign(camp, organizerId);
         return ResponseEntity.ok(created);
     }
 
