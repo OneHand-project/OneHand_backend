@@ -71,18 +71,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@ModelAttribute LoginRequestDTO request) {
+    public ResponseEntity<Object> login(
+        @ModelAttribute LoginRequestDTO request
+    ) {
         try {
             User user = userService.login(
                 request.getUserName(),
                 request.getPassword()
             );
             if (user == null) {
-                System.out.println("failed to get user");
+                return ResponseEntity.status(401).body("failed");
             }
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(401).body("Auth error");
         }
     }
 }
