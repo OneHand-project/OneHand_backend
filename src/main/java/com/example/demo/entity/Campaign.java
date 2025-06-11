@@ -35,6 +35,11 @@ public class Campaign {
 
     private byte[] mainimage;
 
+    private boolean featured = false;
+    private String date;
+    private Double donationGoal;
+    private String category;
+
     public byte[] getMainimage() {
         return mainimage;
     }
@@ -42,10 +47,6 @@ public class Campaign {
     public void setMainimage(byte[] mainimage) {
         this.mainimage = mainimage;
     }
-
-    private String date;
-    private Double donationGoal;
-    private String category;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -113,5 +114,13 @@ public class Campaign {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 }

@@ -4,8 +4,11 @@ import com.example.demo.DTO.CampaignDTO;
 import com.example.demo.entity.Campaign;
 import com.example.demo.service.CampaignService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +54,7 @@ public class CampaignController {
     public ResponseEntity<Campaign> createCampaign(
         @PathVariable Long organizerId,
         @ModelAttribute CampaignDTO campaignDTO,
+        @RequestParam(value = "isFeatured", required = false) String isFeatured,
         @RequestPart(
             value = "mainimage",
             required = false
@@ -64,6 +68,7 @@ public class CampaignController {
             campaignDTO.getDonationGoal(),
             campaignDTO.getCategory()
         );
+        if (isFeatured != null) camp.setFeatured(true);
         if (mainimage != null && !mainimage.isEmpty()) {
             try {
                 byte[] imagebytes = mainimage.getBytes();
@@ -75,6 +80,23 @@ public class CampaignController {
         }
         Campaign created = campaignService.createCampaign(camp, organizerId);
         return ResponseEntity.ok(created);
+    }
+
+    @GetMapping("/featured")
+    public List<CampaignDTO> GetFeaturedCampaigns() {
+        List<Campaign> campaigns = campaignService.GetFeaturedCampaigns();
+        List<CampaignDTO> campaignDTOS = new ArrayList<>();
+        for (Campaign camp : campaigns) {
+            if (camp.getMainimage() != null) {
+                String base64img = Base64.getEncoder()
+                    .encodeToString(camp.getMainimage());
+
+                campaignDTOS.add(new CampaignDTO(camp, base64img));
+            } else {
+                campaignDTOS.add(new CampaignDTO(camp));
+            }
+        }
+        return campaignDTOS;
     }
 
     @DeleteMapping("/{id}")

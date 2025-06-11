@@ -5,16 +5,16 @@ import com.example.demo.ResourceNotFoundException;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class UserService {
+
     //private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
@@ -33,8 +33,13 @@ public class UserService {
 
     @Transactional
     public User createUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("User with email or username already exists");
+        if (
+            userRepository.existsByEmail(user.getEmail()) ||
+            userRepository.existsByUsername(user.getUsername())
+        ) {
+            throw new RuntimeException(
+                "User with email or username already exists"
+            );
         }
         return userRepository.save(user); // Hibernate should commit the transaction here
     }
@@ -46,21 +51,37 @@ public class UserService {
         }
         return false;
     }
+
     public UserProfileDTO getUserProfile(Long id) {
-        return userRepository.findById(id)
-                .map(User::mapToDTO) // or user -> user.mapToDTO()
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-    };
-    public UserProfileDTO updateUserProfile (Long id, UserProfileDTO updatedProfile ){
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return userRepository
+            .findById(id)
+            .map(User::mapToDTO) // or user -> user.mapToDTO()
+            .orElseThrow(() ->
+                new ResourceNotFoundException("User not found with id: " + id)
+            );
+    }
+
+    public UserProfileDTO updateUserProfile(
+        Long id,
+        UserProfileDTO updatedProfile
+    ) {
+        User user = userRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new ResourceNotFoundException("User not found with id: " + id)
+            );
         user.setFirstName(updatedProfile.getFirstName());
         user.setLastName(updatedProfile.getLastName());
-        if( updatedProfile.getPassword() != null && !updatedProfile.getPassword().isEmpty()){
+        if (
+            updatedProfile.getPassword() != null &&
+            !updatedProfile.getPassword().isEmpty()
+        ) {
             user.setPassword(updatedProfile.getPassword());
         }
         User updatedUser = userRepository.save(user);
-        return updatedUser.mapToDTO() ;
+        return updatedUser.mapToDTO();
     }
+
     public User login(String userName, String password) {
         Optional<User> userOpt = userRepository.findByUsername(userName);
         if (userOpt.isPresent()) {
@@ -69,7 +90,6 @@ public class UserService {
                 return user;
             }
         }
-        throw new RuntimeException("Invalid userName or password");
+        return null;
     }
-
 }

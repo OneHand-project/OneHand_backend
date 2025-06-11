@@ -11,4 +11,5 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     Optional<Campaign> findByTitle(String title);
     List<Campaign> findByCategoryIgnoreCase(String category);
     List<Campaign> findByOrganizerId(Long organizerId);
+    List<Campaign> findByFeatured(boolean featured);
 }

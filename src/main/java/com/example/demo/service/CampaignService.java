@@ -38,6 +38,9 @@ public class CampaignService {
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
     }
+    public List<Campaign> GetFeaturedCampaigns() {
+        return campaignRepository.findByFeatured(true);
+    }
 
     public Optional<Campaign> getCampaignById(Long id) {
         return campaignRepository.findById(id);

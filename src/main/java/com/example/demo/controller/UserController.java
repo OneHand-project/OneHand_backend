@@ -4,16 +4,17 @@ import com.example.demo.DTO.LoginRequestDTO;
 import com.example.demo.DTO.UserProfileDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     @Autowired
     private final UserService userService;
 
@@ -31,12 +32,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return user
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // Create a new user
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestAttribute User user) {
         try {
             User savedUser = userService.createUser(user);
             return ResponseEntity.ok(savedUser);
@@ -53,21 +56,33 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<UserProfileDTO> updateUserProfile (@PathVariable Long id, @RequestBody UserProfileDTO profileDTO){
-        UserProfileDTO updatedProfile = userService.updateUserProfile(id, profileDTO);
+    public ResponseEntity<UserProfileDTO> updateUserProfile(
+        @PathVariable Long id,
+        @RequestBody UserProfileDTO profileDTO
+    ) {
+        UserProfileDTO updatedProfile = userService.updateUserProfile(
+            id,
+            profileDTO
+        );
         System.out.println("✅ Controller method reached");
         return ResponseEntity.ok(updatedProfile);
     }
+
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequestDTO request) {
+    public ResponseEntity<User> login(@ModelAttribute LoginRequestDTO request) {
         try {
-            User user = userService.login(request.getUserName(), request.getPassword());
+            User user = userService.login(
+                request.getUserName(),
+                request.getPassword()
+            );
+            if (user == null) {
+                System.out.println("failed to get user");
+            }
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(401).build();
         }
     }
-
-
 }
