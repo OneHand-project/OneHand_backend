@@ -7,9 +7,8 @@ import com.example.demo.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 // @CrossOrigin(origins = "http://localhost:5173")
@@ -17,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService) {
+    public UserController(
+        UserService userService,
+        PasswordEncoder passwordEncoder
+    ) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Get all users
@@ -43,10 +46,13 @@ public class UserController {
     @PostMapping("/newuser")
     public ResponseEntity<User> createUser(@ModelAttribute User user) {
         try {
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
             User savedUser = userService.createUser(user);
             return ResponseEntity.ok(savedUser);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null); // In case user already exists
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build(); // In case user already exists
         }
     }
 
