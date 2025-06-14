@@ -2,6 +2,8 @@ package com.example.demo.DTO;
 
 import com.example.demo.entity.Campaign;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 public class CampaignDTO {
@@ -24,7 +26,7 @@ public class CampaignDTO {
     private String title;
     private String description;
     private String location;
-    private String date;
+    private LocalDate date;
     private Double donationGoal;
     private String category;
     private boolean isFeatured = false;
@@ -62,13 +64,14 @@ public class CampaignDTO {
         this.location = location;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
+
 
     public Double getDonationGoal() {
         return donationGoal;

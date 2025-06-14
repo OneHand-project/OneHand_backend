@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ public class Campaign {
         String title,
         String description,
         String location,
-        String date,
+        LocalDate date,
         Double donationGoal,
         String category
     ) {
@@ -44,7 +46,7 @@ public class Campaign {
     private List<String> multpleimages;
 
     private boolean featured = false;
-    private String date;
+    private LocalDate date;
     private Double donationGoal;
     private String category;
 
@@ -85,11 +87,11 @@ public class Campaign {
         this.location = location;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
