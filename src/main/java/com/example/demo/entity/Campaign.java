@@ -1,6 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Campaign {
@@ -17,6 +21,7 @@ public class Campaign {
         Double donationGoal,
         String category
     ) {
+
         setTitle(title);
         setDescription(description);
         setLocation(location);
@@ -26,37 +31,33 @@ public class Campaign {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     private String title;
     private String description;
     private String location;
 
-    private byte[] mainimage;
+    private String mainimage;
+    private List<String> multpleimages;
 
     private boolean featured = false;
     private String date;
     private Double donationGoal;
     private String category;
 
-    public byte[] getMainimage() {
-        return mainimage;
-    }
-
-    public void setMainimage(byte[] mainimage) {
-        this.mainimage = mainimage;
-    }
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User organizer;
 
-    public Long getId() {
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -122,5 +123,21 @@ public class Campaign {
 
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+
+    public String getMainimage() {
+        return mainimage;
+    }
+
+    public void setMainimage(String mainimage) {
+        this.mainimage = mainimage;
+    }
+
+    public List<String> getMultpleimages() {
+        return multpleimages;
+    }
+
+    public void setMultpleimages(List<String> multpleimages) {
+        this.multpleimages = multpleimages;
     }
 }

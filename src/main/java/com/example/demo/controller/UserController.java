@@ -38,8 +38,8 @@ public class UserController {
     }
 
     // Create a new user
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestAttribute User user) {
+    @PostMapping("/newuser")
+    public ResponseEntity<User> createUser(@ModelAttribute User user) {
         try {
             User savedUser = userService.createUser(user);
             return ResponseEntity.ok(savedUser);

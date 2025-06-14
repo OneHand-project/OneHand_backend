@@ -3,12 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.DTO.CampaignDTO;
 import com.example.demo.entity.Campaign;
 import com.example.demo.service.CampaignService;
+import com.example.demo.service.FileUploadService;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/campaign")
 public class CampaignController {
 
-    @Autowired
+    private final FileUploadService uploadService;
+
+
     private final CampaignService campaignService;
 
-    public CampaignController(CampaignService campaignService) {
+    public CampaignController(
+        CampaignService campaignService,
+        FileUploadService uploadService
+    ) {
         this.campaignService = campaignService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping
@@ -32,7 +39,7 @@ public class CampaignController {
 
     // Get campaign by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
+    public ResponseEntity<Campaign> getCampaignById(@PathVariable UUID id) {
         Optional<Campaign> campaign = campaignService.getCampaignById(id);
         return campaign
             .map(ResponseEntity::ok)
@@ -52,13 +59,14 @@ public class CampaignController {
     // Create a new campaign
     @PostMapping("/{organizerId}")
     public ResponseEntity<Campaign> createCampaign(
-        @PathVariable Long organizerId,
+        @PathVariable long organizerId,
         @ModelAttribute CampaignDTO campaignDTO,
         @RequestParam(value = "isFeatured", required = false) String isFeatured,
-        @RequestPart(
-            value = "mainimage",
+        @RequestParam(
+            value = "main",
             required = false
-        ) MultipartFile mainimage
+        ) MultipartFile mainimage,
+        @RequestParam(value = "images",required = false) List<MultipartFile> multpleimages
     ) {
         Campaign camp = new Campaign(
             campaignDTO.getTitle(),
@@ -68,18 +76,26 @@ public class CampaignController {
             campaignDTO.getDonationGoal(),
             campaignDTO.getCategory()
         );
+
         if (isFeatured != null) camp.setFeatured(true);
+        Campaign created = campaignService.createCampaign(camp, organizerId);
         if (mainimage != null && !mainimage.isEmpty()) {
+
             try {
-                byte[] imagebytes = mainimage.getBytes();
-                camp.setMainimage(imagebytes);
+                String fileUrl = uploadService.uploadFile(
+                    mainimage,
+                    String.valueOf(created.getId())
+                );
+                List<String> imagesurl = uploadService.uploadMultipleFiles(multpleimages,String.valueOf(created.getId()));
+                created.setMainimage(fileUrl);
+                created.setMultpleimages(imagesurl);
             } catch (IOException e) {
                 // Handle error reading bytes from MultipartFile
                 throw new RuntimeException("Failed to read image bytes", e);
             }
         }
-        Campaign created = campaignService.createCampaign(camp, organizerId);
-        return ResponseEntity.ok(created);
+        Campaign saved = campaignService.updateCampaign(created);
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/featured")
@@ -87,20 +103,13 @@ public class CampaignController {
         List<Campaign> campaigns = campaignService.GetFeaturedCampaigns();
         List<CampaignDTO> campaignDTOS = new ArrayList<>();
         for (Campaign camp : campaigns) {
-            if (camp.getMainimage() != null) {
-                String base64img = Base64.getEncoder()
-                    .encodeToString(camp.getMainimage());
-
-                campaignDTOS.add(new CampaignDTO(camp, base64img));
-            } else {
-                campaignDTOS.add(new CampaignDTO(camp));
-            }
+            campaignDTOS.add(new CampaignDTO(camp));
         }
         return campaignDTOS;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCampaign(@PathVariable UUID id) {
         campaignService.deleteCampaign(id);
         return ResponseEntity.noContent().build();
     }
@@ -116,7 +125,7 @@ public class CampaignController {
 
     @GetMapping("/filter/organizer")
     public ResponseEntity<List<Campaign>> filterByOrganizer(
-        @RequestParam Long organizerId
+        @RequestParam long organizerId
     ) {
         return ResponseEntity.ok(
             campaignService.getCampaignsByOrganizer(organizerId)

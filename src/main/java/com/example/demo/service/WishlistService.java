@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class WishlistService {
     @Autowired
     private CampaignRepository campaignRepository;
 
-    public void addToWishlist(Long userId, Long campaignId) {
+    public void addToWishlist(long userId, UUID campaignId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Campaign campaign = campaignRepository.findById(campaignId)
@@ -43,7 +44,7 @@ public class WishlistService {
                 .map(Wishlist::getCampaign)
                 .collect(Collectors.toList());
     }
-    public void deleteFromWishlist(User user, Long campaignId){
+    public void deleteFromWishlist(User user, UUID campaignId){
         wishlistRepository.deleteByUserAndCampaignId(user, campaignId);
     }
 

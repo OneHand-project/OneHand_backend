@@ -8,6 +8,8 @@ import com.example.demo.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,17 @@ public class CampaignService {
         this.userRepository = userRepository;
     }
 
-    public Campaign createCampaign(Campaign campaign, Long organizerId) {
+    public Campaign createCampaign(Campaign campaign, long organizerId) {
         User organizer = userRepository
             .findById(organizerId)
             .orElseThrow(() -> new RuntimeException("Organizer not found"));
         campaign.setOrganizer(organizer);
         return campaignRepository.save(campaign);
+    }
+
+    public Campaign updateCampaign(Campaign campaign){
+        return campaignRepository.save(campaign);
+
     }
 
     public List<Campaign> getAllCampaigns() {
@@ -42,7 +49,7 @@ public class CampaignService {
         return campaignRepository.findByFeatured(true);
     }
 
-    public Optional<Campaign> getCampaignById(Long id) {
+    public Optional<Campaign> getCampaignById(UUID id) {
         return campaignRepository.findById(id);
     }
 
@@ -50,7 +57,7 @@ public class CampaignService {
         return campaignRepository.findByTitle(title);
     }
 
-    public boolean deleteCampaign(Long id) {
+    public boolean deleteCampaign(UUID id) {
         if (campaignRepository.existsById(id)) {
             campaignRepository.deleteById(id);
             return true;
@@ -62,7 +69,7 @@ public class CampaignService {
         return campaignRepository.findByCategoryIgnoreCase(category);
     }
 
-    public List<Campaign> getCampaignsByOrganizer(Long organizerId) {
+    public List<Campaign> getCampaignsByOrganizer(long organizerId) {
         return campaignRepository.findByOrganizerId(organizerId);
     }
 }

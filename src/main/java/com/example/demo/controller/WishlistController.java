@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -17,25 +18,25 @@ public class WishlistController {
     private WishlistService wishlistService;
     @Autowired
     private UserRepository userRepository;
-    private User findUserById(Long userId) {
+    private User findUserById(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 
     @PostMapping()
-    public ResponseEntity<String> addToWishlist(@RequestParam Long userId, @RequestParam Long campaignId){
+    public ResponseEntity<String> addToWishlist(@RequestParam long userId, @RequestParam UUID campaignId){
         wishlistService.addToWishlist(userId, campaignId);
         return ResponseEntity.ok("Campaign Add to Wishlist");
     }
     @GetMapping("/list/{userId}")
-    public ResponseEntity<List<Campaign>> getWishlist(@PathVariable Long userId){
+    public ResponseEntity<List<Campaign>> getWishlist(@PathVariable long userId){
         User user = findUserById(userId);
         List<Campaign> wishlist = wishlistService.getWishlistForUser(user);
         return ResponseEntity.ok(wishlist);
     }
     @DeleteMapping()
-    public ResponseEntity<String> deleteFromWishlist(@RequestParam Long userId, @RequestParam Long campaignId){
+    public ResponseEntity<String> deleteFromWishlist(@RequestParam long userId, @RequestParam UUID campaignId){
         User user = findUserById(userId);
         wishlistService.deleteFromWishlist(user,campaignId);
         return ResponseEntity.ok("Campaign removed from your wishlist");
