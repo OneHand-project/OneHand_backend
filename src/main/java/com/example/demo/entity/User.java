@@ -2,14 +2,19 @@ package com.example.demo.entity;
 
 import com.example.demo.DTO.UserProfileDTO;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 
 @Entity(name = "users")
 
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
     private String firstName;
     private String lastName;
     @Column(unique = true,nullable = false)
@@ -27,21 +32,13 @@ public class User {
     public User() {
     }
 
-//    public User(Long id, String firstName, String lastName, String username, String email, String password, String phoneNumber, boolean emailVerified, boolean phoneVerified, Role role) {
-//        this.id = id;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//        this.phoneNumber = phoneNumber;
-//        this.emailVerified = emailVerified;
-//        this.phoneVerified = phoneVerified;
-//        this.role = role;
-//    }
 
-    public long getId() {
+    public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -60,9 +57,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+
 
     public String getUsername() {
         return username;

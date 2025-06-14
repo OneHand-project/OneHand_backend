@@ -58,7 +58,7 @@ public class CampaignController {
     // Create a new campaign
     @PostMapping("/{organizerId}")
     public ResponseEntity<Campaign> createCampaign(
-        @PathVariable long organizerId,
+        @PathVariable UUID organizerId,
         @ModelAttribute CampaignDTO campaignDTO,
         @RequestParam(value = "isFeatured", required = false) String isFeatured,
         @RequestParam(
@@ -123,7 +123,7 @@ public class CampaignController {
 
     @GetMapping("/filter/organizer")
     public ResponseEntity<List<Campaign>> filterByOrganizer(
-        @RequestParam long organizerId
+        @RequestParam UUID organizerId
     ) {
         return ResponseEntity.ok(
             campaignService.getCampaignsByOrganizer(organizerId)

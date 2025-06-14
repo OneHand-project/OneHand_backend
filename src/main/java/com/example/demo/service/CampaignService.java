@@ -29,7 +29,7 @@ public class CampaignService {
         this.userRepository = userRepository;
     }
 
-    public Campaign createCampaign(Campaign campaign, long organizerId) {
+    public Campaign createCampaign(Campaign campaign, UUID organizerId) {
         User organizer = userRepository
             .findById(organizerId)
             .orElseThrow(() -> new RuntimeException("Organizer not found"));
@@ -69,7 +69,7 @@ public class CampaignService {
         return campaignRepository.findByCategoryIgnoreCase(category);
     }
 
-    public List<Campaign> getCampaignsByOrganizer(long organizerId) {
+    public List<Campaign> getCampaignsByOrganizer(UUID organizerId) {
         return campaignRepository.findByOrganizerId(organizerId);
     }
 }

@@ -6,6 +6,8 @@ import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class UserController {
 
     // Get user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
         Optional<User> user = userService.getUserById(id);
         return user
             .map(ResponseEntity::ok)
@@ -50,7 +52,7 @@ public class UserController {
 
     // Delete user by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         if (userService.deleteUser(id)) {
             return ResponseEntity.noContent().build();
         }
@@ -59,7 +61,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserProfileDTO> updateUserProfile(
-        @PathVariable Long id,
+        @PathVariable UUID id,
         @RequestBody UserProfileDTO profileDTO
     ) {
         UserProfileDTO updatedProfile = userService.updateUserProfile(

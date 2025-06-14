@@ -25,7 +25,7 @@ public class WishlistService {
     @Autowired
     private CampaignRepository campaignRepository;
 
-    public void addToWishlist(long userId, UUID campaignId) {
+    public void addToWishlist(UUID userId, UUID campaignId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Campaign campaign = campaignRepository.findById(campaignId)

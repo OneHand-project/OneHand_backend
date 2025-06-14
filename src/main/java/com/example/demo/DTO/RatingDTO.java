@@ -1,15 +1,17 @@
 package com.example.demo.DTO;
 
+import java.util.UUID;
+
 public class RatingDTO {
     private int score;
     private String comment;
-    private Long userId;
-    private Long campaignId;
+    private UUID userId;
+    private UUID campaignId;
 
     public RatingDTO() {
     }
 
-    public RatingDTO(int score, String comment, Long userId, Long campaignId) {
+    public RatingDTO(int score, String comment, UUID userId, UUID campaignId) {
         this.score = score;
         this.comment = comment;
         this.userId = userId;
@@ -32,19 +34,19 @@ public class RatingDTO {
         this.comment = comment;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public Long getCampaignId() {
+    public UUID getCampaignId() {
         return campaignId;
     }
 
-    public void setCampaignId(Long campaignId) {
+    public void setCampaignId(UUID campaignId) {
         this.campaignId = campaignId;
     }
 }

@@ -7,6 +7,8 @@ import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(UUID id) {
         return userRepository.findById(id);
     }
 
@@ -44,7 +46,7 @@ public class UserService {
         return userRepository.save(user); // Hibernate should commit the transaction here
     }
 
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(UUID id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
@@ -52,7 +54,7 @@ public class UserService {
         return false;
     }
 
-    public UserProfileDTO getUserProfile(Long id) {
+    public UserProfileDTO getUserProfile(UUID id) {
         return userRepository
             .findById(id)
             .map(User::mapToDTO) // or user -> user.mapToDTO()
@@ -62,7 +64,7 @@ public class UserService {
     }
 
     public UserProfileDTO updateUserProfile(
-        Long id,
+        UUID id,
         UserProfileDTO updatedProfile
     ) {
         User user = userRepository

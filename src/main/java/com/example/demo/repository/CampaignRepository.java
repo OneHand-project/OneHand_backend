@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     Optional<Campaign> findById(UUID id);
     Optional<Campaign> findByTitle(String title);
-    List<Campaign> findByOrganizerId(long id);
+    List<Campaign> findByOrganizerId(UUID id);
     boolean existsById(UUID id);
     void deleteById(UUID id);
     List<Campaign> findByCategoryIgnoreCase(String category);
