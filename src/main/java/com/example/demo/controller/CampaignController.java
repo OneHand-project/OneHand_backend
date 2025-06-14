@@ -21,7 +21,6 @@ public class CampaignController {
 
     private final FileUploadService uploadService;
 
-
     private final CampaignService campaignService;
 
     public CampaignController(
@@ -80,7 +79,6 @@ public class CampaignController {
         if (isFeatured != null) camp.setFeatured(true);
         Campaign created = campaignService.createCampaign(camp, organizerId);
         if (mainimage != null && !mainimage.isEmpty()) {
-
             try {
                 String fileUrl = uploadService.uploadFile(
                     mainimage,
